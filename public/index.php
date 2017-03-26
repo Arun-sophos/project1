@@ -1,51 +1,55 @@
-<?php
-    
-    //get file http
-    $results= file_get_contents('http://www.shiksha.com/b-tech/colleges/b-tech-colleges-india?uaf[]=location&ts=1755267&rf=filters&ct[]=29&ed[]=et_20');
-    
-    //Get College individual sets -30
-    preg_match_all('/<div class="clg-tpl-parent">[^\b]+?(<p class="clr">)/',$results,$colleges);
-    $n=count($colleges[0]); //number of colleges
-    
-    //loop through each set
-    for($i=0;$i<$n;$i++){
-        //initialize variables
-        $cname="$1";
-        $location="$1";
-        $facilities="$1";
-        $reviews="$1";
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+<!-- http://getbootstrap.com/ -->
+        <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+
+        <link href="/css/styles.css" rel="stylesheet"/>
+
+            <title>Web Scrapper</title>
         
-        preg_match('/target="_blank">([^<]+)<\/a>/',$colleges[0][$i],$cname); //college name
-        preg_match('/<p>\| *([^<]+)<\/p>/',$colleges[0][$i],$location); //location
-        
-        //echo $cname[1]."<br>".$location[1]."<br>";
-        
-        //facilites
-        if(preg_match('/<ul class="facility-icons">/',$colleges[0][$i])!=0){
-        
-            preg_match_all('/<h3>([^<]+)<\/h3>/',$colleges[0][$i],$facilities);
-            $ft=count($facilities[0]);
-            //for($j=0;$j<$ft;$j++)
-            //    echo $facilities[1][$j]."<br>";
-        }
-        else{
-            echo "*****************No Facilities**********************";
-        }
-        
-        //reviews
-        if(preg_match('/<span><b>[^<]+<\/b><a target="_blank" type="reviews"/',$colleges[0][$i],$reviews)!=0){
-            echo $reviews[0]."<br>";
-        }
-        else{
-            //echo "*************No Reviews****************";
-        }
-    }
-    
-    $conn =dbconnect();
-		if($conn->connect_error){
-				die("Connection Failed".$conn->conncet_error);
-		}
-		else{
-			
-		}
-?>
+
+        <!-- https://jquery.com/ -->
+        <script src="/js/jquery-1.11.3.min.js"></script>
+
+    </head>
+
+    <body>
+
+        <div class="container">
+
+            <div id="top">
+                <div>
+                    <a href="/"><img alt="Scrapper" src="/img/logo.png"/></a>
+                </div>
+                
+            </div>
+            <div id="middle">
+            <form action="searchdb.php" method="post" onsubmit="javascript:return validate('form');">
+                <fieldset>
+                <div class="form-group">
+                    <input autocomplete="on" autofocus class="form-control" name="url" placeholder="Enter URL Here" type="text" required="required"/>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-default" type="submit">
+                        <span aria-hidden="true" class="glyphicon glyphicon-log-in"></span>
+                        Search
+                    </button>
+                </div>
+                </fieldset>
+            </form>
+            
+            </div>
+
+            <div id="bottom">
+                Brought to you by the number <a href="http://espha.000webhostapp.com">Arun Siddharth</a>.
+            </div>
+
+        </div>
+
+    </body>
+
+</html>
