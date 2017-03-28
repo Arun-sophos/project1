@@ -22,7 +22,6 @@
 			if ($result->num_rows > 0) {
 				$row= $result->fetch_assoc();
 				$_SESSION['id']=$row['city_id'];
-				//redirect("index.php");
                 return true;
 			}
 			else {

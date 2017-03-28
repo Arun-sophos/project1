@@ -1,55 +1,87 @@
-<!DOCTYPE html>
+<?php
 
-<html>
-
-    <head>
-
-<!-- http://getbootstrap.com/ -->
-        <link href="/css/bootstrap.min.css" rel="stylesheet"/>
-
-        <link href="/css/styles.css" rel="stylesheet"/>
-
-            <title>Web Scrapper</title>
+    require("../includes/config.php");
+    
+    if ($_SERVER["REQUEST_METHOD"] == "GET")
+    {
+        require("../views/header.php");
+        require("../views/form.php");
+        require("../views/footer.php");
+    }
+    
+    //else run js script
+    else if($_SERVER["REQUEST_METHOD"] == "POST"){
+    	
+    	echo '<script src="/js/jquery-1.11.3.min.js"></script>';
         
+        $url = $_POST['url'];
+        $site = file_get_contents($url);
+        //run and check for location 
+        preg_match('/<a href="javascript:void\(0\);"\sdata-section="city" data-val="[^"]+">([^<]+)<i>x<\/i><\/a>/',$site,$matches);
+        //look whether you found city on that page or not
+        
+        if(!empty($matches)){
+        
+        //look for it in db
+        $loc = $matches[1];
 
-        <!-- https://jquery.com/ -->
-        <script src="/js/jquery-1.11.3.min.js"></script>
+        $conn =dbconnect();
+	        if($conn->connect_error){
+			    die("Connection Failed".$conn->conncet_error);
+	        }
+	        
+	        else{
 
-    </head>
+			    $query = "SELECT * FROM cities WHERE city='".$loc."'";
+    			$result = $conn->query($query);
 
-    <body>
+                //if found redirect to scrapper.php
+	    		if ($result->num_rows > 0) {
+		    		//city found Redirect to scrapped.php
+		    		redirect("scrapped.php");
+			    }
+			    //else make ajax request**
+			    else{
 
-        <div class="container">
+			    	 //enter that city into sql table
+			    	 $query = "INSERT into cities(city) VALUES('".$loc."')";
+    			     $result = $conn->query($query);
+    			     $city_id = $conn->insert_id;
 
-            <div id="top">
-                <div>
-                    <a href="/"><img alt="Scrapper" src="/img/logo.png"/></a>
-                </div>
-                
-            </div>
-            <div id="middle">
-            <form action="searchdb.php" method="post" onsubmit="javascript:return validate('form');">
-                <fieldset>
-                <div class="form-group">
-                    <input autocomplete="on" autofocus class="form-control" name="url" placeholder="Enter URL Here" type="text" required="required"/>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-default" type="submit">
-                        <span aria-hidden="true" class="glyphicon glyphicon-log-in"></span>
-                        Search
-                    </button>
-                </div>
-                </fieldset>
-            </form>
-            
-            </div>
-
-            <div id="bottom">
-                Brought to you by the number <a href="http://espha.000webhostapp.com">Arun Siddharth</a>.
-            </div>
-
-        </div>
-
-    </body>
-
-</html>
+			         //prepare url
+			         $url=preg_replace('/(-[0-9]+.*)/',"",$url);
+			         
+			         //make ajax request
+			         while(true){
+?>
+<img alt="loading" src="/img/ajax-loader.gif"/>
+<script>
+	          $.post('getsite.php',
+    		  {
+        				url: <?php echo $url;?>,
+        				id: <?php echo $city_id;?>
+    		  });       
+</script>
+<?php
+                         echo '<script>alert('.$url.')</script>';
+			             //in that url go and look for pagination
+			             $site = file_get_contents($url);
+			             if(preg_match('/<li class="next linkpagination"><a.+?href\s*=\s*([^>]+)/',$site,$matches)==0){
+			                 break;
+			             }
+			             else{
+			                 $url=$matches[1];
+			                 sleep(5);
+			             }
+                         //if found go and run it again
+			             
+			         }//while
+			    }//ajax script main else
+			
+	        }//main else dbconnect
+        }//if matches
+        else{
+                echo '<script>alert("WRONG URL FORMAT IT ISNOT GIVING ANY CITY DETAIL")</script>';
+        }
+    }
+?>

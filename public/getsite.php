@@ -7,8 +7,9 @@
         http_response_code(400);
         exit;
     }
-    
-    $url = $_POST['url'];
+    $url = 'http://www.shiksha.com/b-tech/colleges/b-tech-colleges-chennai';
+    $_POST['id']='1';
+    //$url = $_POST['url'];
     //get file http
     $results= file_get_contents($url);
     
@@ -38,15 +39,17 @@
             //    echo $facilities[1][$j]."<br>";
         }
         else{
-            echo "*****************No Facilities**********************";
+            $ft=0;
+            $facilities="-";
         }
         
         //reviews
+        
         if(preg_match('/<span><b>[^<]+<\/b><a target="_blank" type="reviews"/',$colleges[0][$i],$reviews)!=0){
-            echo $reviews[0]."<br>";
+            $reviews = $reviews[0];
         }
         else{
-            //echo "*************No Reviews****************";
+            $reviews="-";
         }
     }
     
@@ -55,6 +58,21 @@
 				die("Connection Failed".$conn->conncet_error);
 		}
 		else{
-			
+			//INSERT CNAME,LOCATION,AND FACILITIES
+			$query = "INSERT INTO college(city_id,college,location,reviews) VALUES(".$_POST['id'].",'".$cname."','".$location."',".$reviews.")";
+		    $conn->query($query);
+		    $query = "SELECT id FROM college WHERE college='".$cname."'";
+		    $c_id=$conn->query($query);
+		    $c_id=$c_id[0]['id'];
+		    //ADD FACILITIES
+		    if($ft==0){
+		        $query = "INSERT INTO facilities(city_id,college_id,facility) VALUES(".$_POST['id'].",".$c_id.","."'-')";
+		    }
+		    else{
+		        for($k=0;$k<$ft;$k++){
+		            $query = "INSERT INTO facilties(city_id,college_id,facility) VALUES(".$_POST['id'].",".$c_id.",'".$facilities[1][$k]."')";
+		        }
+		    $conn->query($query);
+		    }
 		}
 ?>

@@ -1,41 +1,7 @@
-<!DOCTYPE html>
-
-<html>
-
-    <head>
-
-<!-- http://getbootstrap.com/ -->
-        <link href="/css/bootstrap.min.css" rel="stylesheet"/>
-
-        <link href="/css/styles.css" rel="stylesheet"/>
-
-            <title>Scrapper Results</title>
-        
-
-        <!-- https://jquery.com/ -->
-        <script src="/js/jquery-1.11.3.min.js"></script>
-
-    </head>
-
-    <body>
-    
-
-
-    <div class="container">
-
-        <div id="top">
-                <div>
-                    <a href="/"><img alt="Scrapper" src="/img/logo.png"/></a>
-                </div>
-                
-        </div>
-        <div id="middle">
-                 <!----MAIN DATA---------->
-                 
 <?php
 //give me city name i will show the data
-            require("../includes/config.php");
-            if (empty($_POST["city"]))
+            require('../views/header.php');
+            if (empty($_SESSION["city"]))
             {
                 http_response_code(400);
                 exit;
@@ -47,12 +13,12 @@
 		    	echo "db connect fail";
         	}
 	        else{
-	            $_POST["city"]=mysqli_real_escape_string($conn,$_POST["city"]);
-			    $query = "SELECT * FROM cities WHERE city='".$_POST["city"]."'";
+	            $_POST["city"]=mysqli_real_escape_string($conn,$_SESSION["city"]);
+			    $query = "SELECT * FROM cities WHERE city='".$_SESSION["city"]."'";
 			    $result = $conn->query($query);
 			    $row= $result->fetch_assoc();
 			    $_SESSION['id']=$row['city_id'];
-		  	    $query = "SELECT * FROM college WHERE city='".$_POST["city"];
+		  	    $query = "SELECT * FROM college WHERE city='".$_SESSION["city"];
 			    $city_data = $conn->query($query);
 			
 		    	$nc = $city_data->num_rows;//no. of colleges
@@ -106,16 +72,5 @@
      
 	    		}//for
 	        }//else db
+	    require('../views/footer.php');
 ?>
-                 <!----FINISH------------->
-        </div>
-
-        <div id="bottom">
-                Brought to you by the number <a href="http://espha.000webhostapp.com">Arun Siddharth</a>.
-        </div>
-
-    </div>
-
-    </body>
-
-</html>
