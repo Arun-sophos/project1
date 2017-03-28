@@ -60,10 +60,11 @@
     		  {
         				url: <?php echo $url;?>,
         				id: <?php echo $city_id;?>
-    		  });       
+    		  });  
+    		  alert("Getting executed");
 </script>
 <?php
-                         echo '<script>alert('.$url.')</script>';
+                         
 			             //in that url go and look for pagination
 			             $site = file_get_contents($url);
 			             if(preg_match('/<li class="next linkpagination"><a.+?href\s*=\s*([^>]+)/',$site,$matches)==0){
@@ -71,7 +72,7 @@
 			             }
 			             else{
 			                 $url=$matches[1];
-			                 sleep(5);
+			                 
 			             }
                          //if found go and run it again
 			             
