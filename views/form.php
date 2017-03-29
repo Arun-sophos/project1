@@ -1,4 +1,4 @@
-<form action="index.php" method="post" onsubmit="javascript:return validate('form');">
+<form action="index.php" method="post">
                 <fieldset>
                 <div class="form-group">
                     <input autocomplete="on" id ="url" autofocus class="form-control" name="url" placeholder="Enter URL Here" type="text" required="required"/>

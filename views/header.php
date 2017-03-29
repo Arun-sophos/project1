@@ -23,7 +23,7 @@
 
             <div id="top">
                 <div>
-                    <a href="/"><img alt="Scrapper" src="/img/logo.png"/></a>
+                    <a href="/"><img style="border:6px outset #ff99ff;border-radius: 25px;" alt="Scrapper" src="/img/logo.jpg"/></a>
                 </div>
                 
             </div>

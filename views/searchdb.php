@@ -5,7 +5,7 @@
     if (empty($_POST["city"]))
     {
         http_response_code(400);
-        exit;
+        exit(1);
     }
     
     $url = $_POST['city'];
