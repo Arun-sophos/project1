@@ -42,7 +42,7 @@
 			         $url=preg_replace('/(-[0-9]+.*)/',"",$url);
 			         //make ajax request
 ?>			         
-			         <img style="margin:auto" alt="loading" src="/img/gears.gif"/>
+			         <center><h3 style="margin-top:20%">LOADING......</h3><br><img src ="img/ajax-loader.gif" ></img></center>
 <?php		         while(true){
 ?>
 
@@ -75,13 +75,20 @@
 <script type="text/javascript" language="JavaScript">
                setTimeout(function () {
                       location.href = 'scrapped.php'; 
-               }, 5000);
+               }, 2000);
 </script>
 <?php
 	        }//main else dbconnect
         }//if matches
         else{
                 echo '<script>alert("WRONG URL FORMAT IT ISNOT GIVING ANY CITY DETAIL")</script>';
+?>
+<script type="text/javascript" language="JavaScript">
+               setTimeout(function () {
+                      location.href = 'index.php'; 
+               }, 0);
+</script>
+<?php                
         }
     }
 ?>
